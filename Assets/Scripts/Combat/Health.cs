@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RPG.Core;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,9 +23,17 @@ namespace RPG.Combat
             Debug.Log("Health: " + health);
             if(!_isDead && health == 0)
             {
-                GetComponent<Animator>().SetTrigger("die");
-                IsDead = true;
+                Die();
             }
+        }
+
+        private void Die()
+        {
+            if (IsDead) return;
+
+            IsDead = true;
+            GetComponent<Animator>().SetTrigger("die");
+            GetComponent<ActionScheduler>().CancelCurrentAction();
         }
 
     }
