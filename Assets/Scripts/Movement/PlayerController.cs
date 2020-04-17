@@ -7,6 +7,8 @@ using UnityEngine;
 
 
 namespace RPG.Control { 
+
+    [RequireComponent(typeof(Fighter))]
     public class PlayerController : MonoBehaviour
     {
         // Start is called before the first frame update
@@ -35,17 +37,21 @@ namespace RPG.Control {
         private bool InteractWithCombat()
         {
            
-                RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
-                foreach (RaycastHit hit in hits)
+            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            foreach (RaycastHit hit in hits)
+            {
+                CombatTarget target = hit.transform.GetComponent<CombatTarget>();
+                if (!GetComponent<Fighter>().CanAttack(target))
                 {
-                    CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-                    if (target == null) continue;
-                    if (Input.GetMouseButtonDown(0)) {
-                        GetComponent<Fighter>().Attack(target);
-                    }
-                    return true;
+                    continue;
                 }
-
+                    
+                if (Input.GetMouseButtonDown(0)) {
+                    GetComponent<Fighter>().Attack(target);
+                }
+                return true;
+            }
+                    
             return false;
             
         }
